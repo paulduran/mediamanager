@@ -1,0 +1,22 @@
+Preferences:
+
+set prefered country;
+
+Argentina:16 / 
+Australia:MA / 
+Denmark:15 / 
+Finland:K-15 / 
+France:-12 / 
+Germany:16 / 
+Hong Kong:IIB / 
+Ireland:12 / 
+Japan:R-15 / 
+New Zealand:R13 / 
+Norway:15 / 
+Philippines:PG-13 / 
+Singapore:PG / 
+Spain:13 / 
+Sweden:15 / 
+UK:15 / 
+USA:Unrated / 
+Canada:PG 

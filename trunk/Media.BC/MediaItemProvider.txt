@@ -1,0 +1,11 @@
+MediaItemProvider
+-----------------
+*creates media items of certain types
+* takes an AppHelper context and populates the business entity objects
+
+--- 
+* show dropdown list of providers next to add button
+* clicking add would then change the list of app helpers
+as well as the set of tabs that are displayed
+* when the app helper has loaded, we tell the provider to create a media item with
+the specified information

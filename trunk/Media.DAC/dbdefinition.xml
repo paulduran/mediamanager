@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<database>
+  <version>1.0</version>
+  <tables>
+    <table name="general_information">
+      <create>
+        <![CDATA[CREATE TABLE general_information (
+	MediaId integer primary key, 	
+	Description varchar(2000), 
+	Cast varchar(2000),
+	Genre varchar(400),
+	Date DateTime,
+	Director varchar(400),
+	Length varchar(40),
+	Country varchar(40),
+	Rating varchar(40)
+)	]]></create>
+      
+    </table>
+    <table name="media_type">
+      <create><![CDATA[CREATE TABLE media_type ( media_type_id int, name varchar(50) )]]></create>
+      <insert>
+        <![CDATA[
+INSERT INTO media_type ( media_type_id, name ) VALUES ( 1, 'DVD' ) ;
+INSERT INTO media_type ( media_type_id, name ) VALUES ( 2, 'DVD-R' ) ;
+INSERT INTO media_type ( media_type_id, name ) VALUES ( 3, 'CD' ) ;
+INSERT INTO media_type ( media_type_id, name ) VALUES ( 4, 'VCD' ) ;
+INSERT INTO media_type ( media_type_id, name ) VALUES ( 5, 'SVCD' ) ;
+INSERT INTO media_type ( media_type_id, name ) VALUES ( 6, 'XViD' ) ;
+      ]]></insert>
+    </table>
+    
+  </tables>
+</database>
