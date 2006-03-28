@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Media.BE.MediaGeneralInformation, Media.BE" table="general_information">
+		<id name="Id" column="MediaId" type="integer">
+			<generator class="native" />
+		</id>
+    <property name="Title" type="String" length="100"/>
+		<property name="Description" type="String" length="2000"/>
+		<property name="Cast" type="String" length="2000"/>
+		<property name="Genre" type="String" length="400"/>
+		<property name="Date" type="DateTime"/>
+		<property name="Director" type="String" length="400"/>
+		<property name="Length" type="String" length="40"/>
+		<property name="Country" type="String" length="40"/>
+		<property name="Rating" type="String" length="40"/>
+    <property name="Image" type="Serializable"/>
+	</class>
+  <class name="Media.BE.MediaItem, Media.BE" table="media">
+    <id name="Id" column="MediaId" type="integer">
+      <generator class="native" />
+    </id>
+    <property name="Type" type="String" length="40"/>
+    <many-to-one
+      name="GeneralInformation"
+      column="GeneralInformationId"
+      class="Media.BE.MediaGeneralInformation, Media.BE"
+    />
+  </class>
+
+</hibernate-mapping>
+
+

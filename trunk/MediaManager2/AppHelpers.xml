@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+	plugin documentation
+	====================
+	
+	each plugin has a csplugin.xml file
+	- this file declares the plugin type and then some 
+	- associated metadata relating to that plugin
+	
+	eg:
+	<plugin type="AppHelper">
+	
+	</plugin>
+-->
+
+<AppHelpers>
+  <AppHelper name="IMDB" class="Media.AppHelpers.ImdbAppHelper, Media.AppHelpers">
+    <inputFields>
+      <inputField name="title"/>
+      <inputField name="year"/>
+    </inputFields>
+    <outputFields>
+      <outputField name="title"/>
+      <outputField name="year"/>
+      <outputField name="URL"/>
+      <outputField name="summary"/>
+      <outputField name="imageURL"/>
+      <outputField name="imageData"/>
+      <outputField name="country"/>
+      <outputField name="genre"/>
+      <outputField name="cast"/>
+      <outputField name="length"/>
+      <outputField name="rating"/>
+      <outputField name="director"/>
+    </outputFields>
+  </AppHelper>
+  <AppHelper name="Amazon" class="Media.AppHelpers.AmazonAppHelper, Media.AppHelpers">
+    <inputFields>
+      <inputField name="title"/>
+      <inputField name="barcode"/>
+    </inputFields>
+    <outputFields>
+      <outputField name="title"/>
+      <outputField name="year"/>
+      <outputField name="URL"/>
+      <outputField name="summary"/>
+      <outputField name="imageURL"/>
+      <outputField name="imageData"/>
+      <outputField name="genre"/>
+      <outputField name="cast"/>
+      <outputField name="length"/>
+      <outputField name="rating"/>
+      <outputField name="director"/>      
+    </outputFields>
+  </AppHelper>
+  <AppHelper name="EpGuides" class="Media.AppHelpers.EpGuides.EpGuidesAppHelper, Media.AppHelpers">
+    <inputFields>
+      <inputField name="title"/>
+    </inputFields>
+    <outputFields>
+      <outputField name="title"/>
+      <outputField name="year"/>
+      <outputField name="URL"/>
+      <outputField name="summary"/>
+      <outputField name="imageURL"/>
+      <outputField name="imageData"/>
+      <outputField name="episodeListUrl"/>
+      <outputField name="genre"/>
+      <outputField name="cast"/>
+      <outputField name="length"/>
+    </outputFields>
+  </AppHelper>
+  <AppHelper name="metacritic-games" class="MetacriticGamesHelper">
+    <inputFields>
+      <inputField name="title"/>
+      <!-- ie: xbox, pc, ps2 etc -->
+      <inputField name="platform"/>
+    </inputFields>
+    <outputFields>
+      <outputField name="title"/>
+      <outputField name="developer"/>
+      <outputField name="publisher"/>
+      <outputField name="release-date"/>
+      <outputField name="genre"/>
+      <outputField name="description"/>
+      <outputField name="URL"/>
+      <outputField name="imageURL"/>
+      <outputField name="imageData"/>
+    </outputFields>
+  </AppHelper>
+  <AppHelper name="nforce-games" class="NForceGamesHelper">
+    <inputFields>
+      <inputField name="title"/>
+      <!-- ie: xbox, pc, ps2 etc -->
+      <inputField name="platform"/>
+    </inputFields>
+    <outputFields>
+      <outputField name="title"/>
+      <outputField name="release-date"/>
+      <outputField name="URL"/>
+    </outputFields>
+  </AppHelper>
+</AppHelpers>
