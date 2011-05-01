@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Text;
 
 namespace Media.BE
@@ -8,7 +8,7 @@ namespace Media.BE
     {
         int SeasonNumber { get; }
 
-        List<IEpisode> Episodes { get; }
+        IList Episodes { get; set; }
 
         /// <summary>
         /// return the episode with the specified episode number within the season

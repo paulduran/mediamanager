@@ -10,20 +10,21 @@ using Media.BC;
 
 namespace MediaManager2
 {
-    public delegate void AppHelperItemSelected(AppHelperItem selectedItem);
+    public delegate void AppHelperItemSelected(IAppHelper appHelper, AppHelperItem selectedItem);
 
     public partial class AppHelperResultSelector : Form
     {
         private AppHelperItem[] items;
-        private Dictionary<LinkLabel, AppHelperItem> linksToItems = new Dictionary<LinkLabel, AppHelperItem>();
 
         private bool showNone = false;
 
         public event AppHelperItemSelected ItemSelectedEvent;
 
-        public AppHelperResultSelector()
+        private IAppHelper appHelper;
+        public AppHelperResultSelector(IAppHelper appHelper)
         {
             InitializeComponent();
+            this.appHelper = appHelper;
         }
 
          public AppHelperItem[] Items
@@ -48,6 +49,7 @@ namespace MediaManager2
                 linkLabel.Location = new System.Drawing.Point(x, y);
                 linkLabel.Name = item.Name;
                 linkLabel.Text = item.Name;
+                linkLabel.Tag = item;
                 linkLabel.Size = new Size(224, 23);
                 linkLabel.FlatStyle = FlatStyle.System;
                 linkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.appResult_LinkClicked);
@@ -57,7 +59,6 @@ namespace MediaManager2
                 linkLabel.AutoSize = true;
                 resultsPanel.Controls.Add(linkLabel);
                 y += 24;
-                linksToItems[linkLabel] = item;
             }
 
         }
@@ -73,11 +74,11 @@ namespace MediaManager2
 
         private void appResult_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
-            AppHelperItem item = linksToItems[(LinkLabel)sender];
+            AppHelperItem item = (AppHelperItem)((LinkLabel)sender).Tag;
             Console.WriteLine("got a click on item: " + item.Name + " with value: " + item.Value);
             //Hide();
             Close();
-            ItemSelectedEvent(item);
+            ItemSelectedEvent(appHelper, item);
         }
 
         private void cancelButton_Click(object sender, EventArgs e)

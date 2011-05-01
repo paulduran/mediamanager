@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,6 +10,28 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MediaManager2</RootNamespace>
     <AssemblyName>MediaManager2</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -18,6 +41,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -26,11 +51,37 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\packages\Iesi.Collections.3.1.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="LinFu.DynamicProxy">
+      <HintPath>..\..\packages\NHibernate.LinFu.3.1.0.4000\lib\Net35\LinFu.DynamicProxy.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\packages\NHibernate.3.1.0.4000\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.LinFu">
+      <HintPath>..\..\packages\NHibernate.LinFu.3.1.0.4000\lib\Net35\NHibernate.ByteCode.LinFu.dll</HintPath>
+    </Reference>
+    <Reference Include="OLAF.Controls, Version=1.0.2463.2054, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\dotnet\Libraries\NHibernate-1.0.1.0\bin\log4net.dll</HintPath>
+      <HintPath>..\..\lib\OLAF.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="RichTextBoxSupportsXHTML, Version=1.0.2343.304, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\RichTextBoxSupportsXHTML.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\..\packages\Spring.Core.1.3.1\lib\Net40\Spring.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -52,11 +103,23 @@
     <Compile Include="CreateTables.Designer.cs">
       <DependentUpon>CreateTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="EpisodeDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EpisodeDetails.Designer.cs">
+      <DependentUpon>EpisodeDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="EpisodeMaintenance.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="EpisodeMaintenance.Designer.cs">
       <DependentUpon>EpisodeMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EpisodeRenamer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EpisodeRenamer.Designer.cs">
+      <DependentUpon>EpisodeRenamer.cs</DependentUpon>
     </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -70,6 +133,19 @@
     <Compile Include="GeneralInformation.Designer.cs">
       <DependentUpon>GeneralInformation.cs</DependentUpon>
     </Compile>
+    <Compile Include="LeftPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LeftPanel.Designer.cs">
+      <DependentUpon>LeftPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MediaItemTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MediaItemTree.Designer.cs">
+      <DependentUpon>MediaItemTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MediaTypeProvider.cs" />
     <Compile Include="NavigationControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -86,9 +162,17 @@
       <DependentUpon>CreateTables.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="EpisodeDetails.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EpisodeDetails.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EpisodeMaintenance.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EpisodeMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EpisodeRenamer.resx">
+      <DependentUpon>EpisodeRenamer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -97,6 +181,14 @@
     <EmbeddedResource Include="GeneralInformation.resx">
       <DependentUpon>GeneralInformation.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LeftPanel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>LeftPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MediaItemTree.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MediaItemTree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NavigationControl.resx">
       <SubType>Designer</SubType>
@@ -107,6 +199,18 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ResultSelector.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ResultSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TabbedMediaItemEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TabbedMediaItemEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TvEpisodeImportDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TvEpisodeImportDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -114,6 +218,10 @@
     </Compile>
     <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\Media.BE.IEpisode.datasource" />
+    <None Include="Properties\DataSources\Media.BE.MediaFileInfo.datasource" />
+    <None Include="Properties\DataSources\Media.BE.MediaGeneralInformation.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -122,6 +230,24 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ResultSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResultSelector.Designer.cs">
+      <DependentUpon>ResultSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TabbedMediaItemEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TabbedMediaItemEditor.Designer.cs">
+      <DependentUpon>TabbedMediaItemEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TvEpisodeImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TvEpisodeImportDialog.Designer.cs">
+      <DependentUpon>TvEpisodeImportDialog.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -144,10 +270,36 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppHelpers.xml" />
+    <None Include="Resources\cd16.png" />
+    <None Include="Resources\plasma-tv16.png" />
+    <None Include="Resources\film16.png" />
+    <None Include="Resources\Folder16.bmp" />
+    <Content Include="Resources\cd24.png" />
+    <Content Include="Resources\film24.png" />
+    <Content Include="Resources\Folder24.bmp" />
+    <Content Include="Resources\plasma-tv24.png" />
     <Content Include="NOTES.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y C:\dotnet\Libraries\SQLite.NET.0.21_x68_dll\*.dll "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

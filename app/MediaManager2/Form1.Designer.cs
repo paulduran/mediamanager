@@ -28,7 +28,9 @@ namespace MediaManager2
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));            
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            Media.BE.MediaGeneralInformation mediaGeneralInformation2 = new Media.BE.MediaGeneralInformation();
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createTablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,6 +38,7 @@ namespace MediaManager2
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolBar = new System.Windows.Forms.ToolStrip();
+            this.drpItemTypes = new System.Windows.Forms.ToolStripComboBox();
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.btnDelete = new System.Windows.Forms.ToolStripButton();
@@ -43,23 +46,31 @@ namespace MediaManager2
             this.btnPrevious = new System.Windows.Forms.ToolStripButton();
             this.btnNext = new System.Windows.Forms.ToolStripButton();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
-            this.mediaTree = new System.Windows.Forms.TreeView();
+            this.leftPanel1 = new MediaManager2.LeftPanel();
+            this.drpHelpers = new System.Windows.Forms.ComboBox();
+            this.editorContainer = new System.Windows.Forms.Panel();
             this.tcEditorPanels = new System.Windows.Forms.TabControl();
             this.tabSummary = new System.Windows.Forms.TabPage();
+            this.generalInformation = new MediaManager2.GeneralInformation();
             this.tabEpisodes = new System.Windows.Forms.TabPage();
+            this.episodeMaintenance = new MediaManager2.EpisodeMaintenance();
             this.txtMovieName = new System.Windows.Forms.TextBox();
             this.btnRetrieveInformation = new System.Windows.Forms.Button();
-            this.generalInformation = new MediaManager2.GeneralInformation();
-            this.episodeMaintenance = new MediaManager2.EpisodeMaintenance();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.navigationControl1 = new MediaManager2.NavigationControl();
+            this.headerStrip1 = new OLAF.Controls.HeaderStrip();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.menuBar.SuspendLayout();
             this.statusBar.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
+            this.editorContainer.SuspendLayout();
             this.tcEditorPanels.SuspendLayout();
             this.tabSummary.SuspendLayout();
             this.tabEpisodes.SuspendLayout();
+            this.headerStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuBar
@@ -99,7 +110,7 @@ namespace MediaManager2
             // 
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.statusBar.Location = new System.Drawing.Point(0, 467);
+            this.statusBar.Location = new System.Drawing.Point(0, 646);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(594, 22);
             this.statusBar.TabIndex = 5;
@@ -114,6 +125,7 @@ namespace MediaManager2
             // toolBar
             // 
             this.toolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.drpItemTypes,
             this.btnNew,
             this.btnSave,
             this.btnDelete,
@@ -124,6 +136,12 @@ namespace MediaManager2
             this.toolBar.Name = "toolBar";
             this.toolBar.Size = new System.Drawing.Size(594, 25);
             this.toolBar.TabIndex = 6;
+            // 
+            // drpItemTypes
+            // 
+            this.drpItemTypes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.drpItemTypes.Name = "drpItemTypes";
+            this.drpItemTypes.Size = new System.Drawing.Size(121, 25);
             // 
             // btnNew
             // 
@@ -189,27 +207,49 @@ namespace MediaManager2
             // splitContainer.Panel1
             // 
             this.splitContainer.Panel1.AutoScroll = true;
-            this.splitContainer.Panel1.Controls.Add(this.mediaTree);
+            this.splitContainer.Panel1.Controls.Add(this.leftPanel1);
+            this.splitContainer.Panel1.Padding = new System.Windows.Forms.Padding(3, 3, 0, 3);
             // 
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.AutoScroll = true;
-            this.splitContainer.Panel2.Controls.Add(this.tcEditorPanels);
+            this.splitContainer.Panel2.Controls.Add(this.headerStrip1);
+            this.splitContainer.Panel2.Controls.Add(this.drpHelpers);
+            this.splitContainer.Panel2.Controls.Add(this.editorContainer);
             this.splitContainer.Panel2.Controls.Add(this.txtMovieName);
             this.splitContainer.Panel2.Controls.Add(this.btnRetrieveInformation);
-            this.splitContainer.Size = new System.Drawing.Size(594, 418);
+            this.splitContainer.Size = new System.Drawing.Size(594, 597);
             this.splitContainer.SplitterDistance = 197;
             this.splitContainer.TabIndex = 7;
             // 
-            // mediaTree
+            // leftPanel1
             // 
-            this.mediaTree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mediaTree.Location = new System.Drawing.Point(0, 0);
-            this.mediaTree.Name = "mediaTree";
-            this.mediaTree.Size = new System.Drawing.Size(197, 418);
-            this.mediaTree.TabIndex = 1;
-            this.mediaTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.mediaTree_AfterSelect);
-            this.mediaTree.Click += new System.EventHandler(this.mediaTree_Click);
+            this.leftPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.leftPanel1.Location = new System.Drawing.Point(3, 3);
+            this.leftPanel1.Name = "leftPanel1";
+            this.leftPanel1.Size = new System.Drawing.Size(194, 591);
+            this.leftPanel1.TabIndex = 0;
+            // 
+            // drpHelpers
+            // 
+            this.drpHelpers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.drpHelpers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.drpHelpers.FormattingEnabled = true;
+            this.drpHelpers.Location = new System.Drawing.Point(197, 7);
+            this.drpHelpers.Name = "drpHelpers";
+            this.drpHelpers.Size = new System.Drawing.Size(110, 21);
+            this.drpHelpers.TabIndex = 8;
+            // 
+            // editorContainer
+            // 
+            this.editorContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.editorContainer.Controls.Add(this.tcEditorPanels);
+            this.editorContainer.Location = new System.Drawing.Point(3, 59);
+            this.editorContainer.Name = "editorContainer";
+            this.editorContainer.Size = new System.Drawing.Size(387, 535);
+            this.editorContainer.TabIndex = 7;
             // 
             // tcEditorPanels
             // 
@@ -218,10 +258,10 @@ namespace MediaManager2
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tcEditorPanels.Controls.Add(this.tabSummary);
             this.tcEditorPanels.Controls.Add(this.tabEpisodes);
-            this.tcEditorPanels.Location = new System.Drawing.Point(3, 33);
+            this.tcEditorPanels.Location = new System.Drawing.Point(0, 0);
             this.tcEditorPanels.Name = "tcEditorPanels";
             this.tcEditorPanels.SelectedIndex = 0;
-            this.tcEditorPanels.Size = new System.Drawing.Size(386, 365);
+            this.tcEditorPanels.Size = new System.Drawing.Size(387, 535);
             this.tcEditorPanels.TabIndex = 6;
             // 
             // tabSummary
@@ -230,10 +270,30 @@ namespace MediaManager2
             this.tabSummary.Location = new System.Drawing.Point(4, 22);
             this.tabSummary.Name = "tabSummary";
             this.tabSummary.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSummary.Size = new System.Drawing.Size(378, 339);
+            this.tabSummary.Size = new System.Drawing.Size(379, 509);
             this.tabSummary.TabIndex = 0;
             this.tabSummary.Text = "Summary";
             this.tabSummary.UseVisualStyleBackColor = true;
+            // 
+            // generalInformation
+            // 
+            mediaGeneralInformation2.Cast = "";
+            mediaGeneralInformation2.Country = "";
+            mediaGeneralInformation2.Date = new System.DateTime(1800, 1, 1, 0, 0, 0, 0);
+            mediaGeneralInformation2.Description = "";
+            mediaGeneralInformation2.Director = "";
+            mediaGeneralInformation2.Genre = "";
+            mediaGeneralInformation2.Id = 0;
+            mediaGeneralInformation2.Image = null;
+            mediaGeneralInformation2.Length = "";
+            mediaGeneralInformation2.Rating = "";
+            mediaGeneralInformation2.Title = "";
+            this.generalInformation.DataObject = mediaGeneralInformation2;
+            this.generalInformation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.generalInformation.Location = new System.Drawing.Point(3, 3);
+            this.generalInformation.Name = "generalInformation";
+            this.generalInformation.Size = new System.Drawing.Size(373, 503);
+            this.generalInformation.TabIndex = 5;
             // 
             // tabEpisodes
             // 
@@ -241,10 +301,21 @@ namespace MediaManager2
             this.tabEpisodes.Location = new System.Drawing.Point(4, 22);
             this.tabEpisodes.Name = "tabEpisodes";
             this.tabEpisodes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEpisodes.Size = new System.Drawing.Size(378, 339);
+            this.tabEpisodes.Size = new System.Drawing.Size(379, 535);
             this.tabEpisodes.TabIndex = 1;
             this.tabEpisodes.Text = "Episodes";
             this.tabEpisodes.UseVisualStyleBackColor = true;
+            // 
+            // episodeMaintenance
+            // 
+            this.episodeMaintenance.AllowDrop = true;
+            this.episodeMaintenance.AutoScroll = true;
+            this.episodeMaintenance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.episodeMaintenance.Location = new System.Drawing.Point(3, 3);
+            this.episodeMaintenance.Name = "episodeMaintenance";
+            this.episodeMaintenance.SeasonHelperFactory = null;
+            this.episodeMaintenance.Size = new System.Drawing.Size(373, 529);
+            this.episodeMaintenance.TabIndex = 0;
             // 
             // txtMovieName
             // 
@@ -252,47 +323,77 @@ namespace MediaManager2
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMovieName.Location = new System.Drawing.Point(3, 7);
             this.txtMovieName.Name = "txtMovieName";
-            this.txtMovieName.Size = new System.Drawing.Size(263, 20);
+            this.txtMovieName.Size = new System.Drawing.Size(188, 20);
             this.txtMovieName.TabIndex = 3;
             this.txtMovieName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMovieName_KeyPress);
             // 
             // btnRetrieveInformation
             // 
             this.btnRetrieveInformation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRetrieveInformation.Location = new System.Drawing.Point(272, 5);
+            this.btnRetrieveInformation.Location = new System.Drawing.Point(313, 5);
             this.btnRetrieveInformation.Name = "btnRetrieveInformation";
-            this.btnRetrieveInformation.Size = new System.Drawing.Size(118, 23);
+            this.btnRetrieveInformation.Size = new System.Drawing.Size(77, 23);
             this.btnRetrieveInformation.TabIndex = 1;
-            this.btnRetrieveInformation.Text = "Retrieve Information";
+            this.btnRetrieveInformation.Text = "Retrieve Info";
             this.btnRetrieveInformation.Click += new System.EventHandler(this.button1_Click);
- 
-            this.generalInformation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.generalInformation.Location = new System.Drawing.Point(3, 3);
-            this.generalInformation.Name = "generalInformation";
-            this.generalInformation.Size = new System.Drawing.Size(372, 333);
-            this.generalInformation.TabIndex = 5;
             // 
-            // episodeMaintenance
+            // imageList1
             // 
-            this.episodeMaintenance.AutoScroll = true;
-            this.episodeMaintenance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.episodeMaintenance.Location = new System.Drawing.Point(3, 3);
-            this.episodeMaintenance.Name = "episodeMaintenance";
-            this.episodeMaintenance.Size = new System.Drawing.Size(372, 333);
-            this.episodeMaintenance.TabIndex = 0;
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "cd16.png");
+            this.imageList1.Images.SetKeyName(1, "plasma-tv16.png");
+            this.imageList1.Images.SetKeyName(2, "film16.png");
+            this.imageList1.Images.SetKeyName(3, "cd24.png");
+            this.imageList1.Images.SetKeyName(4, "plasma-tv24.png");
+            this.imageList1.Images.SetKeyName(5, "film24.png");
+            this.imageList1.Images.SetKeyName(6, "Folder.bmp");
+            this.imageList1.Images.SetKeyName(7, "Folder24.bmp");
+            // 
+            // navigationControl1
+            // 
+            this.navigationControl1.Location = new System.Drawing.Point(371, 0);
+            this.navigationControl1.Name = "navigationControl1";
+            this.navigationControl1.Size = new System.Drawing.Size(223, 26);
+            this.navigationControl1.TabIndex = 8;
+            // 
+            // headerStrip1
+            // 
+            this.headerStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.headerStrip1.AutoSize = false;
+            this.headerStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.headerStrip1.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.headerStrip1.ForeColor = System.Drawing.Color.Black;
+            this.headerStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.headerStrip1.HeaderStyle = OLAF.Controls.AreaHeaderStyle.Small;
+            this.headerStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1});
+            this.headerStrip1.Location = new System.Drawing.Point(0, 31);
+            this.headerStrip1.Name = "headerStrip1";
+            this.headerStrip1.Size = new System.Drawing.Size(393, 19);
+            this.headerStrip1.TabIndex = 9;
+            this.headerStrip1.Text = "headerStrip1";
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(89, 16);
+            this.toolStripLabel1.Text = " Tv Series Details";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(594, 489);
+            this.ClientSize = new System.Drawing.Size(594, 668);
+            this.Controls.Add(this.navigationControl1);
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.toolBar);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.menuBar);
             this.MainMenuStrip = this.menuBar;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Media Manager";
             this.menuBar.ResumeLayout(false);
             this.menuBar.PerformLayout();
             this.statusBar.ResumeLayout(false);
@@ -303,9 +404,12 @@ namespace MediaManager2
             this.splitContainer.Panel2.ResumeLayout(false);
             this.splitContainer.Panel2.PerformLayout();
             this.splitContainer.ResumeLayout(false);
+            this.editorContainer.ResumeLayout(false);
             this.tcEditorPanels.ResumeLayout(false);
             this.tabSummary.ResumeLayout(false);
             this.tabEpisodes.ResumeLayout(false);
+            this.headerStrip1.ResumeLayout(false);
+            this.headerStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -324,7 +428,6 @@ namespace MediaManager2
         private System.Windows.Forms.ToolStrip toolBar;
         private System.Windows.Forms.SplitContainer splitContainer;
         private GeneralInformation generalInformation;
-        private System.Windows.Forms.TreeView mediaTree;
         private System.Windows.Forms.ToolStripButton btnNew;
         private System.Windows.Forms.ToolStripButton btnSave;
         private System.Windows.Forms.ToolStripButton btnPrevious;
@@ -335,6 +438,14 @@ namespace MediaManager2
         private System.Windows.Forms.TabPage tabSummary;
         private System.Windows.Forms.TabPage tabEpisodes;
         private EpisodeMaintenance episodeMaintenance;
+        private System.Windows.Forms.ToolStripComboBox drpItemTypes;
+        private System.Windows.Forms.Panel editorContainer;
+        private System.Windows.Forms.ComboBox drpHelpers;
+        private NavigationControl navigationControl1;
+        private System.Windows.Forms.ImageList imageList1;
+        private LeftPanel leftPanel1;
+        private OLAF.Controls.HeaderStrip headerStrip1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
 
 
     }

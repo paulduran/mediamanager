@@ -96,7 +96,7 @@ namespace Media.Tests
             string name = "IMDB"; // TODO: Initialize to an appropriate value
 
             //AppHelper expected = null;
-            AppHelper actual;
+            IAppHelper actual;
 
             actual = target.GetAppHelper(name);
 

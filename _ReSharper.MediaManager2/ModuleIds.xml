@@ -1,0 +1,9 @@
+<Modules>
+  <Module PersistentId="7CFFF4C9-AA12-4D8E-8BBB-F9075005D52A" ModuleId="Media.Tests" />
+  <Module PersistentId="B0F434AD-63AF-4C6A-9DDC-36064BB57600" ModuleId="Media.BC" />
+  <Module PersistentId="BEA62A7D-7967-4B6B-997B-EF7C8BFA72F0" ModuleId="Media.AppHelpers" />
+  <Module PersistentId="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" ModuleId="System.Windows.Forms" />
+  <Module PersistentId="E1A62DE9-1FF5-47B9-8366-7359E1539E00" ModuleId="MediaManager2" />
+  <Module PersistentId="F255F949-CDF6-44D2-A97C-A499FCFC2865" ModuleId="Media.BE" />
+  <Module PersistentId="05AD127A-6F2C-49F7-976C-00D19885E3E5" ModuleId="Media.DAC" />
+</Modules>

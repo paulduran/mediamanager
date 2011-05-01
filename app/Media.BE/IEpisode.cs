@@ -6,10 +6,10 @@ namespace Media.BE
 {
     public interface IEpisode
     {
-        string Show
+  /*      string Show
         {
             get;
-        }
+        } */
         string Title
         {
             get;
@@ -35,6 +35,10 @@ namespace Media.BE
             get;
         }
         TimeSpan Duration
+        {
+            get;
+        }
+        MediaFile File
         {
             get;
         }

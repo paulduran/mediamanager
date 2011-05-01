@@ -1,32 +1,89 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
-	<class name="Media.BE.MediaGeneralInformation, Media.BE" table="general_information">
-		<id name="Id" column="MediaId" type="integer">
-			<generator class="native" />
-		</id>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <joined-subclass name="Media.BE.MediaGeneralInformation, Media.BE" table="general_information" extends="Media.BE.IMediaItemComponent, Media.BE">
+    <key column="ComponentId"/>
     <property name="Title" type="String" length="100"/>
-		<property name="Description" type="String" length="2000"/>
-		<property name="Cast" type="String" length="2000"/>
-		<property name="Genre" type="String" length="400"/>
-		<property name="Date" type="DateTime"/>
-		<property name="Director" type="String" length="400"/>
-		<property name="Length" type="String" length="40"/>
-		<property name="Country" type="String" length="40"/>
-		<property name="Rating" type="String" length="40"/>
+    <property name="Description" type="String" length="2000"/>
+    <property name="Cast" type="String" length="2000"/>
+    <property name="Genre" type="String" length="400"/>
+    <property name="Date" type="DateTime"/>
+    <property name="Director" type="String" length="400"/>
+    <property name="Length" type="String" length="40"/>
+    <property name="Country" type="String" length="40"/>
+    <property name="Rating" type="String" length="40"/>
     <property name="Image" type="Serializable"/>
-	</class>
+  </joined-subclass>
+  <class name="Media.BE.IMediaItemComponent, Media.BE" table="media_component">
+    <id name="Id" column="ComponentId" type="integer">
+      <generator class="native" />
+    </id>
+    <!--  <discriminator column="ComponentType" type="string"/> -->
+    <!--  discriminator-value="GeneralInformation" -->
+
+  </class>
   <class name="Media.BE.MediaItem, Media.BE" table="media">
     <id name="Id" column="MediaId" type="integer">
       <generator class="native" />
     </id>
     <property name="Type" type="String" length="40"/>
+    <property name="Title" type="String" length="100"/>
+    <property name="ParentId" type="integer"/>
+    <!--
     <many-to-one
       name="GeneralInformation"
       column="GeneralInformationId"
       class="Media.BE.MediaGeneralInformation, Media.BE"
-    />
+    /> -->
+    <!--
+    <bag name="ComponentsList">
+      <key column="MediaItemId" />
+      <one-to-many class="Media.BE.IMediaItemComponent, Media.BE"/>      
+    </bag> -->
+    <map name="Components" cascade="save-update">
+      <key column="MediaItemId" />
+      <index column="Name" type="string"/>
+      <one-to-many class="Media.BE.IMediaItemComponent, Media.BE"/>
+    </map>
+    <bag name="Children" cascade="save-update" lazy="true">
+      <key column="ParentId" />
+      <one-to-many class="Media.BE.MediaItem, Media.BE"/>
+    </bag>
   </class>
-
-</hibernate-mapping>
+  <joined-subclass name="Media.BE.Season, Media.BE" table="tv_season" extends="Media.BE.MediaItem, Media.BE">
+    <key column="Id"/>
+    <property name="SeasonNumber" type="integer"/>
+  </joined-subclass>
+  <joined-subclass name="Media.AppHelpers.Tv.Com.TvSeason, Media.AppHelpers" table="tvcom_tv_season" extends="Media.BE.Season, Media.BE">
+    <key column="Id"/>
+    <property name="SeasonUrl" type="string"/>
+  </joined-subclass>  
+  <joined-subclass name="Media.BE.Episode, Media.BE" table="tv_season_episode" extends="Media.BE.MediaItem, Media.BE">
+    <key column="Id"/>
+    <property name="SeasonNumber" type="integer"/>
+    <property name="EpisodeNumber" type="integer"/>
+    <property name="Title" type="string"/>
+    <property name="Description" type="string"/>
+    <property name="DetailsURIString" type="string"/>
+    <property name="AiringDateTime" type="DateTime"/>
+    <property name="Duration" type="TimeSpan"/>
+  </joined-subclass>
+  <joined-subclass name="Media.BE.TvSeries, Media.BE" table="tv_show_details" extends="Media.BE.MediaItem, Media.BE">
+    <key column="ComponentId"/>
+    <property name="EpisodeListUrl" type="String" length="200"/>
+    <property name="SummaryUrl" type="String" length="200"/>
+  </joined-subclass>
+  <joined-subclass name="Media.BE.MediaFile, Media.BE" table="media_file" extends="Media.BE.MediaItem, Media.BE">
+    <key column="Id"/>
+    <property name="FileName" type="string" />
+    <property name="CodecType" type="Media.BE.MediaCodecType, Media.BE" />
+    <property name="FileProducer" type="string" />
+    <property name="FileType" type="Media.BE.MediaFileType, Media.BE" />
+    <property name="Source" type="Media.BE.MediaSource, Media.BE" />
+    <property name="IsProper" type="boolean" />
+    <property name="IsRepack" type="boolean" />
+    <property name="HasAc3" type="boolean" />
+    <!-- dont bother persisting the episode number, season number etc as they are part of the parent object -->
+  </joined-subclass>
+  </hibernate-mapping>
 
 
