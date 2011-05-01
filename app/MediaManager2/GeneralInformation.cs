@@ -23,12 +23,14 @@ namespace MediaManager2
 
         public void ReadFrom(MediaItem mediaItem)
         {
-            this.DataObject = mediaItem.GeneralInformation;
+            this.txtTitle.Text = mediaItem.Title;
+            this.DataObject = (MediaGeneralInformation) mediaItem.Components["GeneralInformation"];
         }
 
         public void WriteTo(MediaItem mediaItem)
         {
-            mediaItem.GeneralInformation = this.DataObject;
+            mediaItem.Title = this.txtTitle.Text;
+            mediaItem.Components["GeneralInformation"] = this.DataObject;
         }
 
         private void AssignField(object value, Control control)
@@ -59,7 +61,7 @@ namespace MediaManager2
                 catch
                 {
                     // set it to this year if we dont know it
-                    generalInformation.Date = new DateTime(1800, 1, 1);
+                    generalInformation.Date = DateTime.MinValue;
                 }
                 
                 generalInformation.Description = txtSynopsis.Text;
@@ -81,7 +83,7 @@ namespace MediaManager2
                 AssignField( generalInformation.Cast, txtCast );
                 AssignField( generalInformation.Country, txtCountry );
                 int year = generalInformation.Date.Year;
-                if (year != 1800)
+                if (year != DateTime.MinValue.Year)
                     AssignField( year.ToString(), txtdate );
                 else
                     AssignField( null, txtdate );
@@ -92,7 +94,23 @@ namespace MediaManager2
                 AssignField( generalInformation.Length, txtLength );
                 AssignField( generalInformation.Rating, txtRating );
                 AssignField( generalInformation.Title, txtTitle );
-
+                this.richText.Xhtml = "<data>" + generalInformation.Description + "</data>";
+                if (this.richText.Errors.Count > 0)
+                {
+                    foreach (string err in richText.Errors)
+                    {
+                        MessageBox.Show("Error: " + err);
+                    }
+                    txtSynopsis.Visible = true;
+                    richText.Visible = false;
+                    btnEditDescription.Text = "Update";
+                }
+                else
+                {
+                    txtSynopsis.Visible = false;
+                    richText.Visible = true;
+                    btnEditDescription.Text = "Edit";
+                }
                 image.Image = generalInformation.Image;
             }
         }
@@ -159,6 +177,30 @@ namespace MediaManager2
             }
             else
                 e.Effect = DragDropEffects.None;
+        }
+
+        private void btnEditDescription_Click(object sender, EventArgs e)
+        {
+            if (btnEditDescription.Text == "Edit")
+            {
+                txtSynopsis.Visible = true;
+                richText.Visible = false;
+            }
+            else
+            {
+                richText.Xhtml = "<data>" + txtSynopsis.Text + "</data>";
+                if (richText.Errors.Count > 0)
+                {
+                    foreach (string err in richText.Errors)
+                    {
+                        MessageBox.Show("Error: " + err);
+                    }
+                    return;
+                }
+                txtSynopsis.Visible = false;
+                richText.Visible = true;
+            }
+            btnEditDescription.Text = ((btnEditDescription.Text == "Edit") ? "Update" : "Edit");
         }
     }
 }

@@ -13,27 +13,29 @@ namespace Media.DAC
     public class MediaStore
     {
         private readonly ISessionFactory factory;
+        private ISession session;
 
         public MediaStore()
         {
             Initialise();
             Configuration cfg = new Configuration();
-            cfg.AddAssembly("Media.BE");
+            cfg.Configure();
             factory = cfg.BuildSessionFactory();
             //ISession session = factory.OpenSession();
             //IList<MediaGeneralInformation> items = (IList<MediaGeneralInformation>)session.Find("from MediaGeneralInformation");
+            session = factory.OpenSession();
         }
 
         private void Initialise()
         {
             Configuration cfg = new Configuration();
-            cfg.AddAssembly("Media.BE");
-            string driver = (string)cfg.Properties["hibernate.connection.driver_class"];
+            cfg.Configure();
+            string driver = (string)cfg.Properties["connection.driver_class"];
 
             // sqlite specific initialisation
             if (driver.Contains("SQLite"))
             {
-                string connStr = (string)cfg.Properties["hibernate.connection.connection_string"];
+                string connStr = (string)cfg.Properties["connection.connection_string"];
                 // parse connection string, look for datasource.
                 Regex regex = new Regex("Data Source=([^;]+)");
                 Match match = regex.Match(connStr);
@@ -43,36 +45,36 @@ namespace Media.DAC
                     if (File.Exists(dbName))
                     {
                         connStr = connStr + ";New=False";
-                        cfg.Properties["hibernate.connection.connection_string"] = connStr;
+                        cfg.Properties["connection.connection_string"] = connStr;
                     }
                     else
                     {
                         connStr = connStr + ";New=True";
-                        cfg.Properties["hibernate.connection.connection_string"] = connStr;
+                        cfg.Properties["connection.connection_string"] = connStr;
                         new NHibernate.Tool.hbm2ddl.SchemaExport(cfg).Create(true, true);
                     }
                 }
 
-            }
+            }            
         }
 
         public System.Collections.IList GetAllMedia()
         {
-            using( ISession session = factory.OpenSession() )
-            {
-                return session.CreateCriteria(typeof(MediaItem)).List();
+
+                ICriteria criteria = session.CreateCriteria(typeof(MediaItem));
+            return session.CreateQuery("from MediaItem m where ParentId = 0 order by m.Title").List();
+//                return session.Find("from MediaItem m where ParentId = 0 order by m.Title");
+                //return session.CreateCriteria(typeof(MediaItem)).List();
                 //return session.Find("from MediaGeneralInformation");
-            }
+       
         }
 
         public void Delete(MediaItem mii)
         {
-            ISession session = null;
             ITransaction transaction = null;
 
             try
             {
-                session = factory.OpenSession();
                 transaction = session.BeginTransaction();
                 session.Delete(mii);
                 transaction.Commit();
@@ -83,22 +85,17 @@ namespace Media.DAC
                     transaction.Rollback(); // Error => we MUST roll back modifications
                 throw; // Here, we throw the same exception so that it is handled (printed)
             }
-            finally
-            {
-                if (session != null)
-                    session.Close();
-            }
+           
         }
         public void Save(MediaItem mii)
         {
-            ISession session = null;
             ITransaction transaction = null;
 
-            try
+             try
             {
-                session = factory.OpenSession();
                 transaction = session.BeginTransaction();
-                session.SaveOrUpdate(mii.GeneralInformation);
+                DumpMediaItem("", mii);
+                //session.SaveOrUpdate(mii.GeneralInformation);
                 session.SaveOrUpdate(mii);
                 //session.Load(mii, mii.Id);
                 
@@ -110,11 +107,20 @@ namespace Media.DAC
                 if (transaction != null)
                     transaction.Rollback(); // Error => we MUST roll back modifications
                 throw; // Here, we throw the same exception so that it is handled (printed)
-            }
-            finally
+            }           
+        }
+        private void DumpMediaItem(string indent, MediaItem mii)
+        {
+            if (mii == null)
             {
-                if (session != null)
-                    session.Close();
+                Console.WriteLine(indent + "ERROR: null media item");
+                return;
+            }
+
+            Console.WriteLine(string.Format(indent + "MediaItem. id: {0}. parent id: {1}. Type: {2}. Title: {3}. {4} children", mii.Id, mii.ParentId, mii.Type, mii.Title, mii.Children.Count));
+            foreach( MediaItem child in mii.Children )
+            {
+                DumpMediaItem(indent + "    ", child);
             }
         }
     }

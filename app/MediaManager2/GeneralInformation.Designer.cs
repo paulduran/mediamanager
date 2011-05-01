@@ -52,6 +52,8 @@ namespace MediaManager2
             this.lblSynopsis = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
             this.txtTitle = new System.Windows.Forms.TextBox();
+            this.richText = new RichTextBoxSupportsXHTML.RichTextBoxSupportsXHTML();
+            this.btnEditDescription = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.image)).BeginInit();
             this.imageContextMenu.SuspendLayout();
             this.grpInformation.SuspendLayout();
@@ -276,10 +278,35 @@ namespace MediaManager2
             this.txtTitle.Size = new System.Drawing.Size(291, 20);
             this.txtTitle.TabIndex = 10;
             // 
+            // richText
+            // 
+            this.richText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richText.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richText.Location = new System.Drawing.Point(66, 278);
+            this.richText.Name = "richText";
+            this.richText.ReadOnly = true;
+            this.richText.Size = new System.Drawing.Size(299, 85);
+            this.richText.TabIndex = 11;
+            this.richText.Text = "";
+            // 
+            // btnEditDescription
+            // 
+            this.btnEditDescription.Location = new System.Drawing.Point(9, 297);
+            this.btnEditDescription.Name = "btnEditDescription";
+            this.btnEditDescription.Size = new System.Drawing.Size(54, 23);
+            this.btnEditDescription.TabIndex = 12;
+            this.btnEditDescription.Text = "Edit";
+            this.btnEditDescription.UseVisualStyleBackColor = true;
+            this.btnEditDescription.Click += new System.EventHandler(this.btnEditDescription_Click);
+            // 
             // GeneralInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnEditDescription);
+            this.Controls.Add(this.richText);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.txtTitle);
             this.Controls.Add(this.grpInformation);
@@ -326,5 +353,7 @@ namespace MediaManager2
         private System.Windows.Forms.ToolStripMenuItem selectImageURLToolStripMenuItem;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.TextBox txtTitle;
+        private RichTextBoxSupportsXHTML.RichTextBoxSupportsXHTML richText;
+        private System.Windows.Forms.Button btnEditDescription;
     }
 }

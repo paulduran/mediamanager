@@ -9,7 +9,7 @@ namespace Media.BC
 {
     public class AppHelperFactory
     {
-        private Dictionary<string, AppHelper> appHelpers = new Dictionary<string,AppHelper>();
+        private Dictionary<string, IAppHelper> appHelpers = new Dictionary<string,IAppHelper>();
         private Dictionary<string, SimpleAppHelperContext> contexts = new Dictionary<string,SimpleAppHelperContext>();
 
         public AppHelperFactory(string configFile)
@@ -26,7 +26,7 @@ namespace Media.BC
                 if (appHelperType != null)
                 {
                     System.Diagnostics.Debug.WriteLine(string.Format("AppHelperFactory: loaded type: {0}", appHelperType.ToString()));
-                    appHelpers[name] = (AppHelper)Activator.CreateInstance(appHelperType);
+                    appHelpers[name] = (IAppHelper)Activator.CreateInstance(appHelperType);
                     contexts[name] = new SimpleAppHelperContext();
                     List<string> inputFieldNames = new List<string>();
                     foreach (XmlNode inputField in appHelperNode.SelectNodes("inputFields/inputField"))
@@ -52,7 +52,7 @@ namespace Media.BC
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public AppHelper GetAppHelper(string name)
+        public IAppHelper GetAppHelper(string name)
         {
             if( appHelpers.ContainsKey(name) )
                 return appHelpers[name];

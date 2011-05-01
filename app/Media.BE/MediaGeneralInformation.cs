@@ -5,108 +5,60 @@ using System.Drawing;
 
 namespace Media.BE
 {
-    public class MediaGeneralInformation
+    public class MediaGeneralInformation : IMediaItemComponent, IAppHelperAware
     {
-        private int mediaId;
+        public virtual int Id { get; set; }
 
-        public int Id
-        {
-            get { return mediaId; }
-            set { mediaId = value; }
-        }
+        public virtual string Title { get; set; }
 
-        private string title;
+        public virtual DateTime Date { get; set; }
 
-        public string Title
-        {
-            get { return title; }
-            set { title = value; }
-        }
+        public virtual string Director { get; set; }
 
-        private DateTime date;
+        public virtual string Length { get; set; }
 
-        public DateTime Date
-        {
-            get { return date; }
-            set { date = value; }
-        }
+        public virtual string Country { get; set; }
 
-        private string director;
+        public virtual string Rating { get; set; }
 
-        public string Director
-        {
-            get { return director; }
-            set { director = value; }
-        }
+        public virtual string Genre { get; set; }
 
-        private string length;
+        public virtual string Cast { get; set; }
 
-        public string Length
-        {
-            get { return length; }
-            set { length = value; }
-        }
+        public virtual string Description { get; set; }
 
-        private string country;
-
-        public string Country
-        {
-            get { return country; }
-            set { country = value; }
-        }
-
-        private string rating;
-
-        public string Rating
-        {
-            get { return rating; }
-            set { rating = value; }
-        }
-
-        private string genre;
-
-        public string Genre
-        {
-            get { return genre; }
-            set { genre = value; }
-        }
-
-        private string cast;
-
-        public string Cast
-        {
-            get { return cast; }
-            set { cast = value; }
-        }
-
-        private string description;
-
-        public string Description
-        {
-            get { return description; }
-            set { description = value; }
-        }
-
-        private Image image;
-
-        public Image Image
-        {
-            get { return image; }
-            set { image = value; }
-        }
+        public virtual Image Image { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="context"></param>
-        public void ReadFrom(AppHelperContext context)
+        public virtual void ReadFrom(AppHelperContext context)
         {
-            int year = int.Parse(context["year"].ToString());
-            this.Date = new DateTime(year, 1, 1);           
+            if( context["year"] != null ) 
+            {
+                try
+                {
+                    this.Date = DateTime.Parse(context["year"].ToString());
+                }
+                catch
+                {
+                    try
+                    {
+                        int year = int.Parse(context["year"].ToString());
+                        this.Date = new DateTime(year, 1, 1);
+                    }
+                    catch
+                    {
+
+                        this.Date = DateTime.MinValue;
+                    }
+                }
+            }
             this.Genre = (string)context["genre"];
             this.Description = (string)context["summary"];
             this.Title = (string)context["title"];
-            this.country = (string)context["country"];
+            this.Country = (string)context["country"];
             this.Length = (string)context["length"];
             this.Rating = (string)context["rating"];
             this.Director = (string)context["director"];
@@ -116,10 +68,10 @@ namespace Media.BE
 
             {
                 System.Net.WebClient client = new System.Net.WebClient( );
-                this.image = Image.FromStream(client.OpenRead(new Uri((string)context["imageURL"])));
+                this.Image = Image.FromStream(client.OpenRead(new Uri((string)context["imageURL"])));
             }
             else
-                this.image = null;
+                this.Image = null;
         }
     }
 }

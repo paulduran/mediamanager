@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="12"
+   name=""
+   committed-date="2006-03-01T13:43:46.609375Z"
+   url="file:///C:/Documents%20and%20Settings/pauld/My%20Documents/SVN/Projects/MediaManager2_OLAF/Media.AppHelpers/Web%20References"
+   last-author="pauld"
+   kind="dir"
+   uuid="f9c5b7fb-41c4-5b4e-a310-7bc6af48ac0b"
+   repos="file:///C:/Documents%20and%20Settings/pauld/My%20Documents/SVN"
+   revision="50"/>
+<entry
+   name="com.amazon.soap"
+   kind="dir"/>
+</wc-entries>

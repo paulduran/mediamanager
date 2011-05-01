@@ -15,7 +15,7 @@ namespace Media.AppHelpers.TestApp
     {
         private AppHelperFactory factory = new AppHelperFactory(@"C:\Documents and Settings\pauld\My Documents\Visual Studio 2005\Projects\MediaManager2\MediaManager2\AppHelpers.xml");
 
-        private AppHelper helper;
+        private IAppHelper helper;
         private AppHelperContext context;
 
         public AppHelperTester()

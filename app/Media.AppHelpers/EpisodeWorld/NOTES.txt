@@ -1,0 +1,1 @@
+http://episodeworld.com/botsearch/{title}/{language}

@@ -1,138 +1,96 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+using Spring.Context.Support;
+using Spring.Context;
+
 using Media.BC;
 using Media.BE;
 using Media.DAC;
 
-[assembly: log4net.Config.XmlConfigurator(Watch = true)]
+//[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
 namespace MediaManager2
 {
     public partial class Form1 : Form
     {
-        private AppHelperFactory appHelperFactory = new AppHelperFactory(@"C:\Documents and Settings\pauld\My Documents\Visual Studio 2005\Projects\MediaManager\dotnet-Helpers.xml");
-        private AppHelper helper;
         private MediaStore mediaStore;
-        private List<TreeNode> treeNodeList = new List<TreeNode>();
         int curIndex = 0;
 
-        private System.Collections.IList mediaItems;
+        private IList<MediaItem> mediaItems;
+        private IApplicationContext ctx;
+        private Dictionary<string, MediaTypeProvider> providers = new Dictionary<string, MediaTypeProvider>();    
+        //private Dictionary<string, Control> editors = new Dictionary<string,Control>();
+        private IMediaSummary mediaTree;
 
         public Form1()
         {
             InitializeComponent();
+            mediaTree = leftPanel1.Summary;
+            mediaTree.SelectedItemChanged += new EventHandler(mediaTree_AfterSelect);
 
-            mediaStore = new MediaStore();           
-          
-            mediaItems = mediaStore.GetAllMedia();
+            mediaStore = new MediaStore();
 
-            InitialiseTreeView();
-
-            if (mediaItems.Count == 0)
+            mediaItems = new List<MediaItem>();
+            foreach (MediaItem item in mediaStore.GetAllMedia())
+                mediaItems.Add(item);
+            
+            leftPanel1.Initialise(mediaItems);
+ 
+            ctx = ContextRegistry.GetContext();
+            foreach (DictionaryEntry entry in ctx.GetObjectsOfType(typeof(MediaTypeProvider)))
             {
-                DoAdd();
+                MediaTypeProvider provider = (MediaTypeProvider)entry.Value;
+                providers[provider.Name] = provider;
+                drpItemTypes.Items.Add(new ListItem(provider, provider.Name));
             }
-            else
-                UpdateDisplay();
+            drpItemTypes.SelectedIndex = 0;
+            UpdateDisplay();
         }
 
-        private void InitialiseTreeView()
+        #region Tree related
+
+        private void mediaTree_AfterSelect(object sender, EventArgs e)
         {
-            //TreeNode rootNode = new TreeNode();
-            mediaTree.BeginUpdate();
-            //mediaTree.Nodes.Add(rootNode);
-
-            List<TreeNode> unsortedNodes = new List<TreeNode>();
-            //This is list of items that still have no place in tree
-
-            for (int i = 0; i < this.mediaItems.Count; i++)
-            {
-                TreeNode node = this.CreateNode(mediaItems, i);
-                treeNodeList.Add( node );
-                //Fill this list with all items.
-                unsortedNodes.Add(node);
-            }
-
-            int startCount;
-
-            //Iterate until list will not empty.
-            while (unsortedNodes.Count > 0)
-            {
-                startCount = unsortedNodes.Count;
-
-                for (int i = 0 ; i < unsortedNodes.Count ; i++ ) //  unsortedNodes.Count - 1; i >= 0; i--)
-                {
-                    if (this.TryAddNode(unsortedNodes[i]))
-                    {
-                        Console.WriteLine("added node: " + unsortedNodes[i].Text);
-                        //Item found its place.
-                        unsortedNodes.RemoveAt(i);
-                        i--;
-                    }
-                }
-
-                if (startCount == unsortedNodes.Count)
-                {
-                    //Throw if nothing was done, in another way this 
-                    //will continuous loop.
-                    throw new ApplicationException("Tree view confused when try to make your data hierarchical.");
-                }
-            }
-            mediaTree.EndUpdate();
+            DoSelect(mediaTree.SelectedItem);
         }
 
-        private TreeNode CreateNode(System.Collections.IList mediaItems, int index)
+        #endregion
+
+
+        private Control GetEditor(string type)
         {
-            MediaItem item = (MediaItem)mediaItems[index];
-            TreeNode node = new TreeNode( item.GeneralInformation.Title);
-            node.Tag = item;
-            return node;
-        }
+            if (type == null)
+                return tcEditorPanels;
 
-        private bool TryAddNode(TreeNode node)
-        {
-            /*if (this.IsIDNull(node.ParentID))
+            Control editor;
+            
+            MediaTypeProvider provider = providers[type];
+            if (provider == null)
             {
-                //If parent is null this mean that this is root node.
-                this.AddNode(this.Nodes, node);                
-                return true;
+                throw new Exception("Provider not found for item of type: " + type);     
             }
-            else
-            {
-                if (this.items_Identifiers.ContainsKey(node.ParentID))
-                {
-                    //Parent already exists in tree so we can add item to it.
-                    TreeNode parentNode = 
-                            this.items_Identifiers[node.ParentID] as TreeNode;
-                    if (parentNode != null)
-                    {
-                        this.AddNode(parentNode.Nodes, node);                
-                        return true;
-                    }
-                }
-            }*/
-            mediaTree.Nodes.Add(node);
-            //Parent was not found at this point.
-            return true;
+            editor = provider.Editor;
+            editor.Dock = DockStyle.Fill;
+            return editor;
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
-            DoSearch("Amazon");
+            DoSearch((IAppHelper)((ListItem)drpHelpers.SelectedItem).Key);
         }
 
-        private void DoSearch(string appHelper)
+        private void DoSearch(IAppHelper helper)
         {
             statusLabel.Text = "Performing Search. Please Wait...";
             this.Cursor = Cursors.WaitCursor;
             // use an app helper to locate information
-            helper = appHelperFactory.GetAppHelper(appHelper);
+            //helper = appHelperFactory.GetAppHelper(appHelper);
             AppHelperContext context = new SimpleAppHelperContext();
             context["title"] = txtMovieName.Text;
             AppHelperItem[] items = helper.LocateItems(context);
@@ -146,10 +104,10 @@ namespace MediaManager2
                     MessageBox.Show("No Match Found for: " + txtMovieName.Text);
                     break;
                 case 1:
-                    AppHelperItemSelected(items[0]);
+                    AppHelperItemSelected(helper, items[0]);
                     break;
                 default:
-                    AppHelperResultSelector resultSelector = new AppHelperResultSelector();
+                    AppHelperResultSelector resultSelector = new AppHelperResultSelector(helper);
                     resultSelector.ItemSelectedEvent += new AppHelperItemSelected(AppHelperItemSelected);
                     resultSelector.Items = items;
                     resultSelector.Show();
@@ -158,7 +116,7 @@ namespace MediaManager2
         }
 
 
-        private void AppHelperItemSelected(AppHelperItem item)
+        private void AppHelperItemSelected(IAppHelper helper, AppHelperItem item)
         {
             System.Diagnostics.Debug.WriteLine(string.Format("got selected item. name: {0}. value: {1}", item.Name, item.Value));
             AppHelperContext context = new SimpleAppHelperContext();
@@ -166,7 +124,7 @@ namespace MediaManager2
             {
                // if (context["title"] != null)
                //     this.txtMovieName.Text = (string)context["title"];
-                MediaItem.GeneralInformation.ReadFrom(context);
+                MediaItem.ReadFrom(context);
                 UpdateDisplay();
             }
         }
@@ -214,33 +172,27 @@ namespace MediaManager2
             DoNext();
         }
 
-        private void mediaTree_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void mediaTree_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            DoSelect(mediaTree.SelectedNode.Tag);
-       }
-
         private void txtMovieName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == '\r' || e.KeyChar == '\n' )
-                DoSearch("IMDB");
+            if (e.KeyChar == '\r' || e.KeyChar == '\n')
+            {
+                DoSearch((IAppHelper)((ListItem)drpHelpers.SelectedItem).Key);
+            }
         }
 
         private void DoAdd()
         {
             curIndex = mediaItems.Count;
 
-            MediaItem item = new MediaItem();
-            item.GeneralInformation = new MediaGeneralInformation();
+            ListItem listItem = (ListItem)drpItemTypes.SelectedItem;
+            MediaTypeProvider provider = (MediaTypeProvider)listItem.Key;
+            MediaItem item = provider.CreateMediaItem();
+            // MediaItem item = (MediaItem)ctx.GetObject(listItem.Key);
+
+            //MediaItem item = new MediaItem();
+            //item.GeneralInformation = new MediaGeneralInformation();
             mediaItems.Add(item);
-            // this.MediaItem = item;            
-            TreeNode node = CreateNode(mediaItems, curIndex);
-            treeNodeList.Add(node);
-            mediaTree.Nodes.Add( node );
+            mediaTree.Add(item);            
             UpdateDisplay();
         }
 
@@ -250,7 +202,7 @@ namespace MediaManager2
         {
             get
             {
-                foreach (TabPage page in tcEditorPanels.TabPages)
+              /*foreach (TabPage page in tcEditorPanels.TabPages)
                 {
                     foreach (Control ctrl in page.Controls)
                     {
@@ -259,12 +211,50 @@ namespace MediaManager2
                             ((MediaItemBindable)ctrl).WriteTo(currentMediaItem);
                         }
                     }
+                }*/
+                foreach (Control ctrl in editorContainer.Controls)
+                {
+                    if (ctrl is MediaItemBindable)
+                    {
+                        ((MediaItemBindable)ctrl).WriteTo(currentMediaItem);
+                    }
                 }
                 return currentMediaItem;
             }
-            set
+            set            
             {
+                string oldType = ((currentMediaItem != null) ? currentMediaItem.Type : null);
                 currentMediaItem = value;
+                editorContainer.Controls.Clear();
+                if (oldType != currentMediaItem.Type)
+                {
+                    drpHelpers.Items.Clear();
+                    if (providers.ContainsKey(currentMediaItem.Type))
+                    {
+                        MediaTypeProvider provider = providers[currentMediaItem.Type];
+                        foreach (IAppHelper helper in provider.AppHelpers)
+                        {
+                            drpHelpers.Items.Add(new ListItem(helper, helper.Name));
+                        }
+                    }
+
+                    if (drpHelpers.Items.Count > 0)
+                    {
+                        drpHelpers.Enabled = true;
+                        drpHelpers.SelectedIndex = 0;
+                    }
+                    else
+                        drpHelpers.Enabled = false;
+                }
+                Control editor = GetEditor(currentMediaItem.Type);
+
+                if (editor is MediaItemBindable)
+                {
+                    ((MediaItemBindable)editor).ReadFrom(value);
+                }
+                editorContainer.Controls.Add(editor);
+
+                /*
                 foreach (TabPage page in tcEditorPanels.TabPages)
                 {
                     foreach (Control ctrl in page.Controls)
@@ -274,7 +264,7 @@ namespace MediaManager2
                             ((MediaItemBindable)ctrl).ReadFrom(value);
                         }
                     }
-                }
+                }*/
             }
         }
 
@@ -283,7 +273,10 @@ namespace MediaManager2
             for (int i = 0; i < mediaItems.Count; i++)
             {
                 if (mediaItems[i].Equals(tag))
+                {
                     curIndex = i;
+                    break;
+                }
             }            
             UpdateDisplay();          
         }
@@ -293,10 +286,10 @@ namespace MediaManager2
             MediaItem item = this.MediaItem;
             //MediaGeneralInformation info = generalInformation.DataObject;
             mediaStore.Save(item);
-            mediaTree.SelectedNode.Text = item.GeneralInformation.Title;
-            mediaTree.SelectedNode.Tag = item;
+            mediaTree.Replace(mediaTree.SelectedItem, item);
             // re-assign so that the mgi id is retained
             this.MediaItem = item;
+            mediaTree.SelectedItem = item;
             UpdateButtonStatuses();
         }
 
@@ -304,42 +297,32 @@ namespace MediaManager2
         {
             MediaItem item = this.MediaItem;
             //MediaGeneralInformation mgi = (MediaGeneralInformation)mediaItems[curIndex];
-            if( DialogResult.Yes.Equals( MessageBox.Show("deleting: " + item.GeneralInformation.Title, "Confirm Delete", MessageBoxButtons.YesNo)))
+            if( DialogResult.Yes.Equals( MessageBox.Show("deleting: " + item.Title, "Confirm Delete", MessageBoxButtons.YesNo)))
             {
                 mediaStore.Delete(item);                
                 mediaItems.Remove(item);
-                TreeNode node = mediaTree.SelectedNode;
-                if (mediaTree.SelectedNode.NextNode != null)
-                    mediaTree.SelectedNode = node.NextNode;
-                else
-                    mediaTree.SelectedNode = node.PrevNode;
-                mediaTree.Nodes.Remove(node);
-
+                mediaTree.Remove(item);
+                
                 curIndex = Math.Min(mediaItems.Count - 1, curIndex);
                 UpdateDisplay();
             }
         }
 
-        private TreeNode GetNode(object tag)
-        {
-            foreach (TreeNode node in treeNodeList)
-            {
-                if (node.Tag.Equals(tag))
-                    return node;
-            }
-            return null;
-        }
-
-
         private void DoNext()
         {
             curIndex = Math.Min(this.mediaItems.Count-1, curIndex + 1);
+            while (curIndex < mediaItems.Count && ((MediaItem)mediaItems[curIndex]).ParentId != 0)
+                curIndex++;
+
             UpdateDisplay();
         }
 
         private void DoPrevious()
         {
             curIndex = Math.Max(0, curIndex - 1);
+            while (curIndex >= 0 && ((MediaItem)mediaItems[curIndex]).ParentId != 0)
+                curIndex--;
+
             UpdateDisplay();
         }
 
@@ -360,7 +343,7 @@ namespace MediaManager2
             if (curIndex >= mediaItems.Count)
             {
                 // adding new one
-                mediaTree.SelectedNode = null;
+                mediaTree.SelectedItem = null;
                 this.MediaItem = null;
             }
             else
@@ -375,8 +358,7 @@ namespace MediaManager2
                 //MediaGeneralInformation info = (MediaGeneralInformation)mediaItems[curIndex];
                 //generalInformation.DataObject = info;
                 //episodeMaintenance.DataObject = info;
-                TreeNode node = GetNode(this.MediaItem);
-                mediaTree.SelectedNode = node;
+                mediaTree.SelectedItem = this.MediaItem;
                 //treeMediaList .SelectedNode = treeMediaList.Nodes[0];
                 //treeMediaList.Select();
             }
@@ -400,12 +382,42 @@ namespace MediaManager2
             {
                 btnNext.Enabled = true;
             }
-            btnDelete.Enabled = (mediaTree.SelectedNode != null && mediaTree.SelectedNode.Tag != null);
+            btnDelete.Enabled = (mediaTree.SelectedItem != null);
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
             DoDelete();
         }
+
+        private class ListItem
+        {
+            private object key;
+
+            public object Key
+            {
+                get { return key; }
+                set { key = value; }
+            }
+            private string text;
+
+            public string Text
+            {
+                get { return text; }
+                set { text = value; }
+            }
+            public ListItem(object key, string text)
+            {
+                this.key = key;
+                this.text = text;
+            }
+
+            public override string ToString()
+            {
+                return text;
+            }
+        }
+
     }
+
 }

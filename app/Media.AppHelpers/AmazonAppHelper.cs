@@ -12,7 +12,7 @@ namespace Media.AppHelpers
     /// <summary>
     /// Summary description for AmazonAppHelper.
     /// </summary>
-    public class AmazonAppHelper : MarshalByRefObject, AppHelper
+    public class AmazonAppHelper : MarshalByRefObject, IAppHelper
     {
         private const string DEVTAG = "D70LG8D3LB8UB";
         public AmazonAppHelper()
@@ -23,6 +23,10 @@ namespace Media.AppHelpers
         }
         #region AppHelper Members
 
+        public string Name
+        {
+            get { return "Amazon"; }
+        }
         /// <summary>
         /// locates the items (ie: performs a search) using the data in the context. the context
         /// will (possibly) contain data in fields declared as inputFields in the helper contract

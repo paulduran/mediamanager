@@ -8,7 +8,7 @@ using Media.BE;
 
 namespace Media.BC
 {
-    public abstract class RegexAppHelper : MarshalByRefObject, AppHelper
+    public abstract class RegexAppHelper : MarshalByRefObject, IAppHelper
     {
         /// <summary>
         /// 
@@ -25,6 +25,7 @@ namespace Media.BC
         /// <returns></returns>
         public abstract bool LoadItem(AppHelperItem item, AppHelperContext context);
 
+        public abstract string Name { get; }
         /// <summary>
         /// writes the specified message to a debug log.
         /// </summary>
@@ -166,7 +167,9 @@ namespace Media.BC
                 List<string> items = new List<string>();
                 foreach (Match match in matches)
                 {
-                    string val = match.Groups[1].Value.Trim();
+                    string val = match.Groups[1].Value.Trim();                    
+                    if (match.Groups["match"] != null && match.Groups["match"].Value.Trim().Length > 0)
+                        val = match.Groups["match"].Value.Trim();  
                     if (!excludes.Contains(val) && val.Length > 0)
                         items.Add(val);
                 }

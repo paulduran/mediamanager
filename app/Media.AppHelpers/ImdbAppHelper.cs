@@ -84,6 +84,10 @@ namespace Media.AppHelpers
         }
         #region AppHelper Members
 
+        public override string Name
+        {
+            get { return "IMDB"; }
+        }
         /// <summary>
         /// locates the items (ie: performs a search) using the data in the context. the context
         /// will (possibly) contain data in fields declared as inputFields in the helper contract

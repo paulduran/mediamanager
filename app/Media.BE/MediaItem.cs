@@ -1,42 +1,73 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Collections;
 
 namespace Media.BE
 {
-    public class MediaItem
+    public class MediaItem : IAppHelperAware
     {
-        private string type;
-        public string Type
+        public MediaItem()
         {
-            get { return type; }
-            set { type = value; }
+            Components = new Hashtable();
+            MetaData = new Dictionary<string,object>();
+            Children = new ArrayList();
         }
 
-        private MediaGeneralInformation info;
-        public MediaGeneralInformation GeneralInformation
+        public virtual string Type { get; set; }
+
+        public virtual Dictionary<string, object> MetaData { get; set; }
+        /// <summary>
+        /// Compatibility interface for spring as it cannot yet handle generics
+        /// </summary>
+        /// <value>The metadata dictionary.</value>
+        public virtual IDictionary MetaDataCompat
         {
             get
             {
-
-                return info;
+                return new Hashtable(MetaData);
             }
             set
             {
-                this.info = value;
+                MetaData = new Dictionary<string, object>();
+                foreach (DictionaryEntry entry in value)
+                {
+                    MetaData[(string)entry.Key] = entry.Value;
+                }
             }
         }
 
-        private int id;
-        public int Id
+        /// <summary>
+        /// Compatibility interface for spring as it cannot yet handle generics
+        /// </summary>
+        /// <value>The components dictionary.</value>
+        public virtual IDictionary Components { get; set; }
+
+        /// <summary>
+        /// gets or sets the list of MediaItem objects that are the children of this object
+        /// </summary>
+        /// <value>The children.</value>
+        public virtual IList Children { get; set; }
+
+        public virtual int ParentId { get; set; }
+
+        public virtual int Id { get; set; }
+
+        public virtual string Title { get; set; }
+
+        public virtual void ReadFrom(AppHelperContext context)
         {
-            get
+           /* foreach (object obj in context.GetEnumerator())
             {
-                return id;
-            }
-            set
+                if (entry.Key.StartsWith("Meta"))
+                {
+                    MetaData[entry.Key.ToString()] = entry.Value;
+                }
+            }*/
+            foreach (object obj in Components.Values)
             {
-                this.id = value;
+                if (obj is IAppHelperAware)
+                    ((IAppHelperAware)obj).ReadFrom(context);
             }
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Media.BE;
@@ -8,7 +9,7 @@ namespace Media.BC
     /// <summary>
     /// this interface is implemented by all classes that wish to be registered as an app helper.
     /// </summary>
-    public interface AppHelper
+    public interface IAppHelper
     {
         /// <summary>
         /// locates the items (ie: performs a search) using the data in the context. the context
@@ -23,6 +24,14 @@ namespace Media.BC
         /// <param name="listener"></param>
         /// <param name="context"></param>
         bool LoadItem(AppHelperItem item, AppHelperContext context);
+
+        /// <summary>
+        /// returns the name of this app helper; used in dropdown lists etc
+        /// </summary>
+        string Name
+        {
+            get;
+        }
     }
    
     public class AppHelperException : Exception
@@ -69,6 +78,10 @@ namespace Media.BC
             }
         }
 
+        public IEnumerator GetEnumerator()
+        {
+            return ht.GetEnumerator();
+        }
         public object this[string fieldName]
         {
             get
