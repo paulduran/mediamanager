@@ -100,6 +100,8 @@ namespace Media.AppHelpers
 
             Debug("requesting URL: " + url);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Proxy = WebRequest.GetSystemWebProxy();
+            request.Proxy.Credentials = CredentialCache.DefaultCredentials;
             request.AllowAutoRedirect = false;
             request.UserAgent = "Mozilla 6.0";
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();

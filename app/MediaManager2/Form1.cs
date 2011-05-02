@@ -225,6 +225,9 @@ namespace MediaManager2
             {
                 string oldType = ((currentMediaItem != null) ? currentMediaItem.Type : null);
                 currentMediaItem = value;
+                if (oldType == null && currentMediaItem == null)
+                    return;
+
                 editorContainer.Controls.Clear();
                 if (oldType != currentMediaItem.Type)
                 {
