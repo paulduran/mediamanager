@@ -22,16 +22,12 @@ namespace Media.AppHelpers.TvRage
         public AppHelperItem[] LocateItems(AppHelperContext context)
         {
             string url = string.Format("http://services.tvrage.com/myfeeds/search.php?key={0}&show={1}", key, context["title"]);
-
-            var request = WebRequest.Create(url);
-            request.Proxy = WebRequest.GetSystemWebProxy();
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            XDocument doc = XDocument.Load(response.GetResponseStream());
+            XDocument doc = IOUtil.LoadXml(url);
             List<AppHelperItem> items = new List<AppHelperItem>();
 
             foreach(var showElement in doc.Element("Results").Elements("show"))
             {
-                items.Add(new SimpleAppHelperItem { Name = showElement.Element("name").Value, Value = showElement });
+                items.Add(new SimpleAppHelperItem { Name = showElement.Element("name").Value, Value = showElement.Element("showid").Value });
             }
 
             return items.ToArray();
@@ -39,14 +35,23 @@ namespace Media.AppHelpers.TvRage
 
         public bool LoadItem(AppHelperItem item, AppHelperContext context)
         {
-            XElement doc = (XElement)item.Value;
-            context["title"] = doc.Element("name").Value;
+            string showId = (string)item.Value;
+            string url = string.Format("http://services.tvrage.com/myfeeds/showinfo.php?key={0}&sid={1}", key, showId);
+
+            XElement doc = IOUtil.LoadXml(url).Element("Showinfo");
+            context["title"] = doc.Element("showname").Value;
             context["id"] = doc.Element("showid").Value;
-            context["country"] = doc.Element("name").Value;
-            context["year"] = doc.Element("started").Value;
+            context["country"] = doc.Element("origin_country").Value;
+            context["year"] = doc.Element("startdate").Value;
             context["length"] = doc.Element("seasons").Value + " seasons";
             context["genre"] = string.Join(", ", from e in doc.Element("genres").Elements("genre")
                                                   select e.Value);
+            context["imageURL"] = doc.Element("image").Value;
+            if (context["imageURL"] != null)
+            {
+                string imageUrl = (string)context["imageURL"];
+                context["imageData"] = IOUtil.LoadUrl(imageUrl);
+            }
             return true;
         }
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using System.Net;
+using System.Xml.Linq;
 
 namespace Media.CO
 {
@@ -17,6 +18,15 @@ namespace Media.CO
             Trace.WriteLine("opening connection to: " + url);
             Stream dataStream = client.OpenRead(url);
             return ReadStreamFully(dataStream);
+        }
+
+        public static XDocument LoadXml(string url)
+        {
+            var request = WebRequest.Create(url);
+            request.Proxy = WebRequest.GetSystemWebProxy();
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            XDocument doc = XDocument.Load(response.GetResponseStream());
+            return doc;
         }
 
         public static byte[] ReadStreamFully(Stream dataStream)
