@@ -9,7 +9,11 @@ for certain types of media. There are currently app helpers for IMDB, Amazon, Tv
 
 Movies
 ------
-MediaManager allows you to keep a catalog of your movies whether they be media files or physical media.
+MediaManager allows you to keep a catalog of your movies whether they be media files or physical media. 
+Movie information such as cast, genre, movie summary and cover art can be fetched using one of the 
+app helpers. Alternatively, the information can be entered manually. Please note that the cover image 
+may be updated by dragging/dropping a new image over the old one.
+
 
 Tv Shows
 --------
