@@ -45,7 +45,7 @@ namespace Media.AppHelpers.TvRage
             context["country"] = doc.Element("name").Value;
             context["year"] = doc.Element("started").Value;
             context["length"] = doc.Element("seasons").Value + " seasons";
-            context["genres"] = string.Join(", ", from e in doc.Element("genres").Elements("genre")
+            context["genre"] = string.Join(", ", from e in doc.Element("genres").Elements("genre")
                                                   select e.Value);
             return true;
         }
