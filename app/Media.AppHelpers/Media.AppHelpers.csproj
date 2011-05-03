@@ -55,13 +55,25 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Amazon.ECS.Addons\AmazonHeader.cs" />
+    <Compile Include="Amazon.ECS.Addons\AmazonSigningEndpointBehavior.cs" />
+    <Compile Include="Amazon.ECS.Addons\AmazonSigningMessageInspector.cs" />
     <Compile Include="AmazonAppHelper.cs" />
+    <Compile Include="AmazonCommerceAppHelper.cs" />
     <Compile Include="EpGuides\AppHelper.cs" />
+    <Compile Include="Service References\Amazon\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Tv.Com\TvComAppHelper.cs" />
     <Compile Include="Tv.Com\TvComSeasonHelper.cs" />
     <Compile Include="Tv.Com\TvSeason.cs" />
@@ -115,6 +127,76 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Service References\Amazon\AWSECommerceService1.wsdl" />
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.BrowseNodeLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.CartAddResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.CartClearResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.CartCreateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.CartGetResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.CartModifyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.CustomerContentLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.CustomerContentSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.HelpResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.ItemLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.ItemSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.ListLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.ListSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.MultiOperationResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.SellerListingLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.SellerListingSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.SellerLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.SimilarityLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.TagLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.TransactionLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.VehiclePartLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.VehiclePartSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Amazon\Media.AppHelpers.Amazon.VehicleSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Web References\com.amazon.soap\AmazonSearch.wsdl" />
     <None Include="Web References\com.amazon.soap\GetTransactionDetailsResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
@@ -147,6 +229,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="EpisodeWorld\NOTES.txt" />
+    <None Include="Service References\Amazon\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\Amazon\configuration.svcinfo" />
+    <None Include="Service References\Amazon\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -164,6 +252,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\Amazon\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

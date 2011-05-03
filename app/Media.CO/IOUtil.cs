@@ -12,6 +12,8 @@ namespace Media.CO
         public static byte[] LoadUrl(string url)
         {
             WebClient client = new WebClient();
+            client.Proxy = WebRequest.GetSystemWebProxy();
+            client.Proxy.Credentials = CredentialCache.DefaultCredentials;
             Trace.WriteLine("opening connection to: " + url);
             Stream dataStream = client.OpenRead(url);
             return ReadStreamFully(dataStream);

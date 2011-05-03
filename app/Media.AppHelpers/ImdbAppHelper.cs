@@ -6,7 +6,7 @@ using System.Net;
 using System.Diagnostics;
 using System.IO;
 using System.Collections;
-
+using System.Xml.Linq;
 using Media.BC;
 using Media.BE;
 
@@ -15,30 +15,10 @@ namespace Media.AppHelpers
     public class ImdbAppHelperItem : AppHelperItem
     {
         #region AppHelperItem Members
-        private string _name;
-        private Uri _val;
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
-        public object Value
-        {
-            get
-            {
-                return _val;
-            }
-            set
-            {
-                this._val = (Uri)value;
-            }
-        }
+
+        public string Name { get; set; }
+
+        public object Value { get; set; }
 
         //	public HttpWebResponse Response = null;
         #endregion
@@ -88,6 +68,7 @@ namespace Media.AppHelpers
         {
             get { return "IMDB"; }
         }
+
         /// <summary>
         /// locates the items (ie: performs a search) using the data in the context. the context
         /// will (possibly) contain data in fields declared as inputFields in the helper contract
@@ -138,13 +119,26 @@ namespace Media.AppHelpers
             Debug("doing something!");
         }
 
+        private ImdbAppHelperItem[] ProcessSearchResponse(Uri baseUri, Stream stream)
+        {
+            XDocument document = XDocument.Load(stream);
+            var movie = document.Element("root").Element("movie");
+            ImdbAppHelperItem item = new ImdbAppHelperItem
+                                     {
+                                         Name =
+                                             string.Format("{0} ({1})", movie.Attribute("title").Value,
+                                                           movie.Attribute("year").Value),
+                                         Value = movie.Attribute("id").Value
+                                     };
+            return new ImdbAppHelperItem[] { item };
+        }
         /// <summary>
         /// Processes the search response.
         /// </summary>
         /// <param name="baseUri">The base URI.</param>
         /// <param name="stream">The stream.</param>
         /// <returns></returns>
-        private ImdbAppHelperItem[] ProcessSearchResponse(Uri baseUri, Stream stream)
+        private ImdbAppHelperItem[] ProcessSearchResponseOld(Uri baseUri, Stream stream)
         {
             StreamReader sr = new StreamReader(stream);
             string line;
@@ -185,7 +179,7 @@ namespace Media.AppHelpers
         /// <param name="item"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public override bool LoadItem(AppHelperItem item, AppHelperContext context)
+        public bool LoadItemOld(AppHelperItem item, AppHelperContext context)
         {
             string url = item.Value.ToString();
             context["URL"] = url;
@@ -199,8 +193,47 @@ namespace Media.AppHelpers
                 return false;
             }
 
+            
             ProcessExpressions(expressions, context, response.GetResponseStream());
             
+            if (context["imageURL"] != null)
+            {
+                string imageUrl = (string)context["imageURL"];
+                context["imageData"] = LoadData(imageUrl);
+            }
+            return true;
+        }
+
+        public override bool LoadItem(AppHelperItem item, AppHelperContext context)
+        {
+            string url = string.Format("http://www.imdbapi.com/?i={0}&r=XML", item.Value);
+            context["URL"] = url;
+            HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(url);
+            webrequest.UserAgent = "Mozilla 6.0";
+            HttpWebResponse response = (HttpWebResponse)webrequest.GetResponse();
+            Debug("creating new request/response");
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                Debug("invalid response code (" + response.StatusCode + ") cannot load item");
+                return false;
+            }
+
+            XDocument document = XDocument.Load(response.GetResponseStream());
+            var movie = document.Element("root").Element("movie");
+            context["imageURL"] = movie.Attribute("poster").Value;
+            context["title"] = movie.Attribute("title").Value;
+            context["genre"] = movie.Attribute("genre").Value;
+            context["summary"] = movie.Attribute("plot").Value;
+            context["director"] = movie.Attribute("director").Value;
+            context["cast"] = movie.Attribute("actors").Value;
+            context["length"] = movie.Attribute("runtime").Value;
+            context["rating"] = movie.Attribute("rating").Value;
+            context["year"] = movie.Attribute("year").Value;
+
+            // length rating director cast genre summary
+
+//            ProcessExpressions(expressions, context, response.GetResponseStream());))))
+
             if (context["imageURL"] != null)
             {
                 string imageUrl = (string)context["imageURL"];
@@ -216,7 +249,7 @@ namespace Media.AppHelpers
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private static string BuildSearchURL(AppHelperContext context)
+        private static string BuildSearchURLOld(AppHelperContext context)
         {
             string extra = null;
             string year = (string)context["year"];
@@ -226,6 +259,24 @@ namespace Media.AppHelpers
             }
             string theTitle = ((string)context["title"]).Replace(" ", "+");
             return string.Format("http://imdb.com/find?q={0};tt{1}", theTitle, extra != null ? extra : "");
+        }
+
+        /// <summary>
+        /// constructs the search url based on the information in the context
+        /// object that we can use to effect the search
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private static string BuildSearchURL(AppHelperContext context)
+        {
+            string extra = null;
+            string year = (string)context["year"];
+            if (!string.IsNullOrEmpty(year))
+            {
+                extra = string.Format("&y={0}", year);
+            }
+            string theTitle = ((string)context["title"]).Replace(" ", "+");
+            return string.Format("http://www.imdbapi.com/?t={0}&r=XML{1}", theTitle, extra ?? "");
         }
 
         /// <summary>

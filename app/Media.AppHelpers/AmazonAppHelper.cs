@@ -66,7 +66,7 @@ namespace Media.AppHelpers
                 Details details = info.Details[i];
 
                 Trace.WriteLine("item: " + details.ProductName);
-                items[i] = new AmazonAppHelperItem(details.ProductName, details);
+                items[i] = new AmazonAppHelperItem {Name = details.ProductName, Value = details};
             }
             return items;
         }
@@ -157,29 +157,11 @@ namespace Media.AppHelpers
 
     class AmazonAppHelperItem : AppHelperItem
     {
-        private String _name;
-        private object _val;
         #region AppHelperItem Members
-        public AmazonAppHelperItem(String name, Details details)
-        {
-            this._name = name;
-            this._val = details;
-        }
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-        }
 
-        public object Value
-        {
-            get
-            {
-                return _val;
-            }
-        }
+        public string Name { get; set; }
+
+        public object Value { get; set; }
 
         #endregion
     }

@@ -218,6 +218,9 @@
     </Compile>
     <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="local.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Media.BE.IEpisode.datasource" />
     <None Include="Properties\DataSources\Media.BE.MediaFileInfo.datasource" />

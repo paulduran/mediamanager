@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:typens="http://soap.amazon.com" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" name="AmazonSearch" targetNamespace="http://soap.amazon.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:typens="http://soap.amazon.com" xmlns="http://schemas.xmlsoap.org/wsdl/" name="AmazonSearch" targetNamespace="http://soap.amazon.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <xsd:schema xmlns="" targetNamespace="http://soap.amazon.com">
       <xsd:complexType name="ProductLineArray">
@@ -605,6 +605,7 @@
       <xsd:complexType name="MarketplaceRequest">
         <xsd:all>
           <xsd:element name="marketplace_search" type="xsd:string" />
+          <xsd:element name="seller-id" type="xsd:string" />
           <xsd:element name="tag" type="xsd:string" />
           <xsd:element name="type" type="xsd:string" />
           <xsd:element name="devtag" type="xsd:string" />

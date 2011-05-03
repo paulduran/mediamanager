@@ -3290,6 +3290,8 @@ namespace Media.AppHelpers.com.amazon.soap {
         
         private string marketplace_searchField;
         
+        private string selleridField;
+        
         private string tagField;
         
         private string typeField;
@@ -3327,6 +3329,17 @@ namespace Media.AppHelpers.com.amazon.soap {
             }
             set {
                 this.marketplace_searchField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.SoapElementAttribute("seller-id")]
+        public string sellerid {
+            get {
+                return this.selleridField;
+            }
+            set {
+                this.selleridField = value;
             }
         }
         

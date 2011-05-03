@@ -8,7 +8,5 @@ deploy
 deploy/*
 *.suo
 *.cache
-<<<<<<< HEAD
 _Resharper.*
-=======
->>>>>>> 304134a51cef5e4f8cba13958e5dfe4f40d77e75
+local.config
