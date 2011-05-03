@@ -15,8 +15,6 @@ namespace Media.AppHelpers
     {
         private readonly string accessKeyId;
         private readonly string secretKey;
-//        private string accessKeyId = "AKIAISVP2WI7QJFOCXKQ";
-//        private string secretKey = "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";
 
         public AmazonCommerceAppHelper(string accessKeyId, string secretKey)
         {
