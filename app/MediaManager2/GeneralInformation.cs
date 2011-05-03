@@ -94,7 +94,7 @@ namespace MediaManager2
                 AssignField( generalInformation.Length, txtLength );
                 AssignField( generalInformation.Rating, txtRating );
                 AssignField( generalInformation.Title, txtTitle );
-                this.richText.Xhtml = "<data>" + generalInformation.Description + "</data>";
+                this.richText.Xhtml = "<font face='Tahoma' size='2'>" + generalInformation.Description + "</font>";
                 if (this.richText.Errors.Count > 0)
                 {
                     foreach (string err in richText.Errors)
@@ -188,7 +188,7 @@ namespace MediaManager2
             }
             else
             {
-                richText.Xhtml = "<data>" + txtSynopsis.Text + "</data>";
+                richText.Xhtml = "<font face='Tahoma' size='2'>" + txtSynopsis.Text + "</font>";
                 if (richText.Errors.Count > 0)
                 {
                     foreach (string err in richText.Errors)
