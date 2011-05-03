@@ -1,9 +1,8 @@
-﻿using System;
-using System.ServiceModel.Channels;
+﻿using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 
-namespace Simple {
+namespace Media.AppHelpers.Amazon.Signing {
 	public class AmazonSigningEndpointBehavior : IEndpointBehavior {
 		private string	accessKeyId	= "";
 		private string	secretKey	= "";

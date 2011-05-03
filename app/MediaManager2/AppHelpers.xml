@@ -14,7 +14,7 @@
 -->
 
 <AppHelpers>
-  <AppHelper name="IMDB" class="Media.AppHelpers.ImdbAppHelper, Media.AppHelpers">
+  <AppHelper name="IMDB" class="Media.AppHelpers.Imdb.AppHelper, Media.AppHelpers">
     <inputFields>
       <inputField name="title"/>
       <inputField name="year"/>
@@ -34,7 +34,7 @@
       <outputField name="director"/>
     </outputFields>
   </AppHelper>
-  <AppHelper name="Amazon" class="Media.AppHelpers.AmazonAppHelper, Media.AppHelpers">
+  <AppHelper name="Amazon" class="Media.AppHelpers.Amazon.AppHelper, Media.AppHelpers">
     <inputFields>
       <inputField name="title"/>
       <inputField name="barcode"/>

@@ -6,7 +6,7 @@ using System.ServiceModel.Dispatcher;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Simple {
+namespace Media.AppHelpers.Amazon.Signing {
 	public class AmazonSigningMessageInspector : IClientMessageInspector {
 		private string	accessKeyId	= "";
 		private string	secretKey	= "";

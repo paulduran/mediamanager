@@ -1,22 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Xml.Serialization;
-using Media.AppHelpers.Amazon;
+using Media.AppHelpers.Amazon.Signing;
 using Media.BC;
 using Media.BE;
 using Media.CO;
-using Simple;
 
-namespace Media.AppHelpers
+namespace Media.AppHelpers.Amazon
 {
-    public class AmazonCommerceAppHelper : IAppHelper
+    public class AppHelper : IAppHelper
     {
         private readonly string accessKeyId;
         private readonly string secretKey;
 
-        public AmazonCommerceAppHelper(string accessKeyId, string secretKey)
+        public AppHelper(string accessKeyId, string secretKey)
         {
             this.accessKeyId = accessKeyId;
             this.secretKey = secretKey;
@@ -27,14 +25,20 @@ namespace Media.AppHelpers
             // prepare an ItemSearch request
             ItemSearchRequest request = new ItemSearchRequest();
             request.SearchIndex = "DVD";
-            request.Title = (string)context["title"];
+            request.Keywords = (string) context["title"];
             request.ResponseGroup = new[] { "ItemAttributes", "EditorialReview", "Images" };
 
             var response = DoSearch(request);
+            var item = response.Items[0];
 
-            return response.Items[0].Item.Select(item => new AmazonAppHelperItem()
+            if (item.Request.Errors != null && item.Request.Errors.Length > 0)
+            {
+                // TODO: log error messages?
+                return new AppHelperItem[0];
+            }
+            return item.Item.Select(x=> new AmazonAppHelperItem()
                                                          {
-                                                             Name = item.ItemAttributes.Title, Value = item
+                                                             Name = x.ItemAttributes.Title, Value = x
                                                          }).Cast<AppHelperItem>().ToArray();
         }
 
@@ -58,7 +62,7 @@ namespace Media.AppHelpers
         {
             Item details = (Item) item.Value;
             // for debugging
-            XmlSerializer ser = new XmlSerializer(typeof(Item));
+            XmlSerializer ser = new XmlSerializer(typeof (Item));
             StringWriter outWriter = new StringWriter();
             ser.Serialize(outWriter, details);
             string xml = outWriter.ToString();
@@ -73,17 +77,24 @@ namespace Media.AppHelpers
                 context["imageURL"] = details.LargeImage.URL;
                 context["imageData"] = IOUtil.LoadUrl(details.LargeImage.URL);
             }
-            context["cast"] = string.Join(", ", details.ItemAttributes.Actor);
-            context["director"] = string.Join(", ", details.ItemAttributes.Director);
-            context["length"] = details.ItemAttributes.RunningTime.Value + " " + details.ItemAttributes.RunningTime.Units;
-            DateTime relDate = DateTime.Parse(details.ItemAttributes.TheatricalReleaseDate);
-            context["year"] = relDate.Year;
+            if (details.ItemAttributes.Actor != null)
+                context["cast"] = string.Join(", ", details.ItemAttributes.Actor);
+            if (details.ItemAttributes.Director != null)
+                context["director"] = string.Join(", ", details.ItemAttributes.Director);
+            context["length"] = details.ItemAttributes.RunningTime.Value + " " +
+                                details.ItemAttributes.RunningTime.Units;
+            DateTime relDate;
+            if (DateTime.TryParse(details.ItemAttributes.TheatricalReleaseDate, out relDate))
+                context["year"] = relDate.Year;
+            else
+                context["year"] = details.ItemAttributes.TheatricalReleaseDate;
+            
             return true;
         }
 
         public string Name
         {
-            get { return "Amazon AWSECommerceService"; }
+            get { return "Amazon"; }
         }
     }
 }

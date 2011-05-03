@@ -1,8 +1,7 @@
-﻿using System;
-using System.ServiceModel.Channels;
+﻿using System.ServiceModel.Channels;
 using System.Xml;
 
-namespace Simple {
+namespace Media.AppHelpers.Amazon.Signing {
 	public class AmazonHeader : MessageHeader {
 		private string	name;
 		private string	value;

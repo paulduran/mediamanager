@@ -22,15 +22,5 @@ namespace Media.AppHelpers.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://soap.amazon.com/onca/soap3")]
-        public string Media_AppHelpers_com_amazon_soap_AmazonSearchService {
-            get {
-                return ((string)(this["Media_AppHelpers_com_amazon_soap_AmazonSearchService"]));
-            }
-        }
     }
 }
