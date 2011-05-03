@@ -45,7 +45,7 @@ namespace Media.AppHelpers.EpGuides
                 if (name.Contains("(a Titles and Air Dates Guide)"))
                 {
                     name = name.Replace("(a Titles and Air Dates Guide)", "");
-                    items.Add(new SimpleAppHelperItem(name, m.Groups[1].Value));
+                    items.Add(new SimpleAppHelperItem {Name = name, Value = m.Groups[1].Value});
                 }
             }
             return items.ToArray();

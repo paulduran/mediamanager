@@ -75,8 +75,7 @@ namespace Media.AppHelpers.Tv.Com
                 string pathPart = showMatches[i].Groups[1].ToString();
                 pathPart = Regex.Replace(pathPart, "([?&])(q=[^&]+)", "$1full_summary=1");
 
-                SimpleAppHelperItem item = new SimpleAppHelperItem(showMatches[i].Groups[2].ToString(),
-                    new Uri(baseUri, pathPart));
+                SimpleAppHelperItem item = new SimpleAppHelperItem { Name = showMatches[i].Groups[2].ToString(), Value = new Uri(baseUri, pathPart) };
                 Trace.WriteLine("got URI: " + item.Value);
                 items.Add(item);
             }

@@ -101,29 +101,12 @@ namespace Media.BC
     }
     public class SimpleAppHelperItem : AppHelperItem
     {
-        private String _name;
-        private object _val;
         #region AppHelperItem Members
-        public SimpleAppHelperItem(String name, Object details)
-        {
-            this._name = name;
-            this._val = details;
-        }
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-        }
 
-        public object Value
-        {
-            get
-            {
-                return _val;
-            }
-        }
+        public string Name { get; set; }
+
+        public object Value { get; set; }
+
         #endregion
     }
 }
